@@ -1,0 +1,83 @@
+
+enum UserStatus {
+  INACTIVE
+  ACTIVE
+  SUSPENDED
+  BLOCKED
+}
+ 
+enum UserType {
+  ADMIN
+  SUBADMIN
+  SELLER
+  BUYER
+}
+ 
+model User {
+  id                Int              @id @default(autoincrement())
+  first_name        String?          @db.VarChar(100)
+  middle_name       String?          @db.VarChar(100)
+  last_name         String?          @db.VarChar(100)
+  email             String           @unique @db.VarChar(200)
+  password          String
+  mobile_number     String?          @db.VarChar(25)
+  designation       String?          @db.VarChar(50)
+  status            UserStatus       @default(INACTIVE)
+  user_type         UserType         @default(BUYER)
+  is_login          Boolean          @default(false)
+  last_logged_in_at DateTime?
+  last_logged_in_ip String?          @db.VarChar(50)
+  created_at        DateTime         @default(now())
+  created_by        Int?
+  updated_at        DateTime         @updatedAt
+  updated_by        Int?
+  deleted_at        DateTime?
+  deleted_by        Int?
+  user_information  UserInformation?
+ 
+  @@map("users")
+}
+ 
+enum UserEntity {
+  INDIVIDUAL
+  COMPANY
+}
+ 
+model UserInformation {
+  id                        Int        @id @default(autoincrement())
+  user_id                   Int        @unique
+  user                      User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  employee_id               Int?
+  entity                    UserEntity @default(INDIVIDUAL)
+  full_name_as_per_pan_card String?    @db.VarChar(191)
+  company_name              String?    @db.VarChar(191)
+  pan_card_number           String?    @db.VarChar(25)
+  data_of_birth             DateTime?  @db.Date()
+  phone_number              String?    @db.VarChar(25)
+  checker_id                Int?
+  step_completed            Int?       @default(0)
+  referal_code_id           Int?
+  profile_url               String?    @db.VarChar(100)
+  created_at                DateTime   @default(now())
+  created_by                Int?
+  updated_at                DateTime   @updatedAt
+  updated_by                Int?
+  deleted_at                DateTime?
+  deleted_by                Int?
+ 
+  @@map("user_informations")
+}
+
+model vehicleType {
+  id         Int       @id @default(autoincrement())
+  type       String?   @db.VarChar(80)
+  is_active  Boolean   @default(false)
+  created_at DateTime  @default(now())
+  created_by Int?
+  updated_at DateTime  @updatedAt
+  updated_by Int?
+  deleted_at DateTime?
+  deleted_by Int?
+ 
+  @@map("vehicle_types")
+}
